@@ -27,3 +27,14 @@ def enquiry(request):
             msg='Enquiry Submitted! We will get back to you as soon as possible'
     form=forms.EnquiryForm
     return render (request, 'enquiry.html', {'form':form, 'msg':msg})
+
+#Gallery
+def gallery(request):
+    gallery=models.Gallery.objects.all().order_by('-id')
+    return render (request, 'gallery.html', {'galleries':gallery})
+
+#GalleryImage
+def gallery_details(request, id):
+    gallery=models.Gallery.objects.get(id=id)
+    gallery_imgs=models.GalleryImage.objects.filter(gallery=gallery).order_by('-id')
+    return render (request, 'gallery_imgs.html', {'gallery_imgs':gallery_imgs, 'gallery':gallery})
