@@ -38,3 +38,9 @@ def gallery_details(request, id):
     gallery=models.Gallery.objects.get(id=id)
     gallery_imgs=models.GalleryImage.objects.filter(gallery=gallery).order_by('-id')
     return render (request, 'gallery_imgs.html', {'gallery_imgs':gallery_imgs, 'gallery':gallery})
+
+#Sub Plans
+def pricing(request):
+    pricing=models.SubPlan.objects.all()
+    dfeatures=models.SubPlanFeature.objects.distinct()
+    return render(request, 'pricing.html', {'plans':pricing, 'dfeatures':dfeatures})

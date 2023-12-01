@@ -132,8 +132,27 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-JAZZMIN_SETTINGS={
-    "site_title": "Re1gns GMS",
-    "site_header": "Reigns GMS Admin",
-    "order_with_respect_to": ["auth", "main.banners", "main.services", "main.enquiry", "main.gallery", "main.GalleryImage", "main.page"],
+JAZZMIN_SETTINGS = {
+    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    "site_title": "GMS Admin",
+
+    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_header": "Re1gns",
+
+    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_brand": "REIGNS",
+
+    # Logo to use for your site, must be present in static files, used for brand on top left
+    #"site_logo": "static/imgs/enquiry.jpg",
+     # Welcome text on the login screen
+     
+    "welcome_sign": "Welcome to the Gym Management System",
+
+    "order_with_respect_to": ["auth", "main.Banners", "main.Service", "main.Enquiry", "main.Gallery", "main.GalleryImage", "main.Page", "main.FAQ", "main.SubPlan", "main.SubPlanFeature",],
+
+    "order_with_respect_to": ["auth", "main.banners", "Services", "main.Enquiry", "main.Gallery", "main.GalleryImage", "main.page"],
+}
+JAZZMIN_UI_TWEAKS = {
+    "theme": "slate",
+    "dark_mode_theme": "darkly",
 }

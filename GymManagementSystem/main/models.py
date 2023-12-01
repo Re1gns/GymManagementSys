@@ -44,7 +44,7 @@ class FAQ(models.Model):
 class Enquiry(models.Model):
     full_name=models.CharField(max_length=150)
     email=models.CharField(max_length=150)
-    phone_number=models.CharField(max_length=15)
+    phone_number=models.IntegerField()
     details=models.TextField()
     send_time=models.DateTimeField(auto_now_add=True)
 
@@ -74,3 +74,20 @@ class GalleryImage(models.Model):
     
     def image_tag(self):
         return mark_safe('<img src="%s" width="80" />' % (self.img.url))
+
+# Subsription Plans
+class SubPlan(models.Model):
+    highlight_status=models.BooleanField(default=False, null=True)
+    title=models.CharField(max_length=150)
+    price=models.IntegerField()
+
+    def __str__(self):
+        return self.title
+
+# Subscription Plans Features
+class SubPlanFeature(models.Model):
+    subplan=models.ForeignKey(SubPlan, on_delete=models.CASCADE)
+    title=models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.title
