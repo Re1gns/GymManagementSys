@@ -86,7 +86,7 @@ class SubPlan(models.Model):
 
 # Subscription Plans Features
 class SubPlanFeature(models.Model):
-    subplan=models.ForeignKey(SubPlan, on_delete=models.CASCADE)
+    subplan=models.ManyToManyField(SubPlan)
     title=models.CharField(max_length=150)
 
     def __str__(self):
