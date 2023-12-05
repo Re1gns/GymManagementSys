@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
     <!-- Main Start -->
     <main>
@@ -9,7 +10,7 @@
                 {% for gimg in gallery_imgs %}
 				<div class="col-md-4 mb-4">
 					<div class="card">
-					  <img src="{{gimg.img.url}}" class="card-img-top" alt="{{gimg.alt_text}}">
+						<a data-lightbox="home-gallery" href="{{gimg.img.url}}"><img src="{{gimg.img.url}}" class="card-img-top" alt="{{gimg.alt_text}}">
 					</div>
 				</div>
                 {% endfor %}
@@ -18,4 +19,7 @@
 		<!-- End -->
     </main>
     <!-- End -->
+	<!--Lightbox-->
+<script type="text/javascript" src="{% static 'lightbox2/dist/js/lightbox.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'lightbox2/dist/css/lightbox.min.css' %}" />
 {% endblock %}

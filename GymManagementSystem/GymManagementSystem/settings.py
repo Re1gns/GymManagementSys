@@ -156,3 +156,6 @@ JAZZMIN_UI_TWEAKS = {
     "theme": "slate",
     "dark_mode_theme": "darkly",
 }
+
+LOGIN_REDIRECT_URL='home'
+LOGOUT_REDIRECT_URL='login'
