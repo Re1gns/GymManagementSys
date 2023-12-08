@@ -11,6 +11,8 @@ urlpatterns=[
     path('gallery', views.gallery, name='gallery'),
     path('gallery_details/<int:id>', views.gallery_details, name='gallery_details'),
     path('pricing', views.pricing, name='pricing'),
+    path('checkout/<int:plan_id>', views.checkout, name='checkout'),
+    path('accounts/signup', views.signup, name='signup'),
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT )

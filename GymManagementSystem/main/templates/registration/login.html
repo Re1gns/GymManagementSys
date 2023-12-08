@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-{% if request.user.is_not_authenticated %}
+{% if not request.user.is_authenticated %}
     <!-- Main Start -->
     <main>
 		<!-- Services -->
@@ -23,13 +23,14 @@
 							</tr>
 						</table>
 					</form>
+					<p>If you are a new user, please<a href="{% url 'signup' %}"> SignUp</a></p>
 				</div>
 			</div>
 		</section>
 		<!-- End -->
     </main>
     <!-- End -->
-    {% else %}
-    <p>Already Logged In</p>
-    {% endif %}
+{% else %}
+	<p class="text-success col-md-10 offset-5">Already Logged In!</p>
+{% endif %}
 {% endblock %}

@@ -42,6 +42,22 @@ def gallery_details(request, id):
 
 #Sub Plans
 def pricing(request):
-    pricing=models.SubPlan.objects.all()
+    pricing=models.SubPlan.objects.all().order_by('price')
     dfeatures=models.SubPlanFeature.objects.all()
     return render(request, 'pricing.html', {'plans':pricing, 'dfeatures':dfeatures})
+
+#Signup
+def signup(request):
+    msg=None
+    if request.method =='POST':
+        form=forms.Signup(request.POST)
+        if form.is_valid():
+            form.save()
+            msg='Thank you for registering'
+    form=forms.Signup
+    return render(request, 'registration/signup.html', {'form':form, 'msg':msg})
+
+#Checkout View
+def checkout(request, plan_id):
+    PlanDetail=models.SubPlan.objects.get(pk=plan_id)
+    return render(request, 'checkout.html', {'Plan':PlanDetail})

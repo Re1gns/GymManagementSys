@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.html import mark_safe
+from django.contrib.auth.models import User
 
 #Banners Model
 class Banners(models.Model):
@@ -77,9 +78,10 @@ class GalleryImage(models.Model):
 
 # Subsription Plans
 class SubPlan(models.Model):
-    highlight_status=models.BooleanField(default=False, null=True)
     title=models.CharField(max_length=150)
     price=models.IntegerField()
+    max_member=models.IntegerField(null=True)
+    highlight_status=models.BooleanField(default=False, null=True)
 
     def __str__(self):
         return self.title
@@ -91,3 +93,31 @@ class SubPlanFeature(models.Model):
 
     def __str__(self):
         return self.title
+    
+#Discount Package
+class PlanDiscount(models.Model):
+    subplan=models.ForeignKey(SubPlan, on_delete=models.CASCADE, null=True)
+    total_month=models.IntegerField()
+    total_discount = models.IntegerField()
+
+    def __str__(self):
+        return str (self.total_month)
+    
+#Subscriber
+class Subscriber(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    tel=models.CharField(max_length=20)
+    address=models.TextField()
+    img=models.ImageField(upload_to="subs/")
+
+    def __str__(self):
+        return str (self.subs)
+
+    def image_tag(self):
+        return mark_safe('<img src="%s" width="80" />' % (self.img.url))
+    
+#Subscription
+class Subscription(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    plan=models.ForeignKey(SubPlan, on_delete=models.CASCADE, null=True)
+    price=models.CharField(max_length=50)

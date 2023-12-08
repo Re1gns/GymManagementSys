@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+ <!-- Main Start -->
+    <main>
+		<!-- Services -->
+		<section class="container my-4">
+			<h1 class="text-center mb-4 section-heading border-bottom pb-2">Checkout</h1>
+				<table class="table table-bordered">
+					<thead class="table-warning">
+						<tr>
+							<th>Plan</th>
+							<th>Plan Detail</th>
+							<th>Payment For</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<table class="table-bordered table">
+									<tr>
+										<th>Name</th>
+										<td>{{Plan.title}}</td>
+									</tr>
+									<tr>
+										<th>Price</th>
+										<td>${{Plan.price}}</td>
+									</tr>
+									<tr>
+										<th>Max Member</th>
+										<td>30</td>
+									</tr>
+									<tr>
+										<th>Already Registered</th>
+										<td>15</td>
+									</tr>
+									<tr>
+										<th>Balance Seats</th>
+										<td>15</td>
+									</tr>
+								</table>
+							</td>
+							<td>
+								<ul class="list-unstyled">
+									{% for feature in Plan.subplanfeature_set.all %}
+										<li>{{feature.title}}</li>
+										{% endfor %}
+					            </ul>
+							</td>
+							<td>
+								<table class="table table-bordered">
+									{% for discount in Plan.plandiscount_set.all %}
+									<tr>
+										<td><input data-planprice="{{Plan.price}}" data-discount="{{discount.total_discount}}" type="radio" id="validity{{discount.id}}" name="validity" class="select-validity" value="{{discount.total_month}}" /></td>
+										<th><label for="validity{{discount.id}}">{{discount.total_month}} months</label></th>
+										<td>{{discount.total_discount}}%</td>
+									</tr>
+										{% endfor %}
+								</table>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot class="table-info">
+						<tr>
+							<td></td>
+							<th>Total Amount</th>
+							<td><b>$<span class="totalAmount">{{Plan.price}}</span></b></td>
+						</tr>
+						<tr>
+							<td colspan="2"></td>
+							<td><input type="submit" value="Proceed to Payment" class="btn btn-primary" /></td>
+						</tr>
+					</tfoot>
+				</table>
+		</section>
+		<!-- End -->
+    </main>
+    <!-- End -->
+
+<script type="text/javascript">
+	$(document).ready(function () {
+    $(".select-validity").on('click', function () {
+        // Parse the attributes as floats
+        var _planPrice = parseFloat($(this).attr('data-planprice'));
+        var _planDisc = parseFloat($(this).attr('data-discount'));
+        var _planValid = parseFloat($(this).val());
+
+        // Calculate the total price
+        var _totalPrice = _planPrice * _planValid;
+
+        // Apply the discount
+        if (_planDisc > 0) {
+            var _discountedPrice = _totalPrice - (_totalPrice * _planDisc / 100);
+        } else {
+            var _discountedPrice = _totalPrice;
+        }
+
+        // Round the result to two decimal places
+        _discountedPrice = Math.round(_discountedPrice * 100) / 100;
+
+        // Display the result
+        $(".totalAmount").text(_discountedPrice);
+    });
+});
+</script>
+{% endblock %}
