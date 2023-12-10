@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from . import models, forms
 import stripe
+from django.core.mail import EmailMessage
 
 #Home Page
 def home(request):
@@ -64,7 +65,7 @@ def checkout(request, plan_id):
     return render(request, 'checkout.html', {'Plan':PlanDetail})
 
 #Checkout session
-stripe.api_key = ''
+stripe.api_key = 'sk_test_51KlzlxCxXy9cWFkINPAB3WbgMOW6hnNf4SCVFjb0OKutMxyh0EQHWgxtxx5vYu2vxHjDmItkJyhf5ROOxzvYASe900lw3jNHvX'
 def checkout_session(request, plan_id):
     plan=models.SubPlan.objects.get(pk=plan_id)
     session = stripe.checkout.Session.create(
@@ -79,13 +80,23 @@ def checkout_session(request, plan_id):
             'quantity': 1,
         }],
         mode='payment',
-        success_url='http://127.0.0.1:8000/payment_success',
+        success_url='http://127.0.0.1:8000/payment_success?session_id={CHECKOUT_SESSION_ID}',
         cancel_url='http://127.0.0.1:8000/payment_cancel',
+        client_reference_id=plan_id
 )
     return redirect(session.url, code=303)
 
 #Payment_Success
 def payment_success(request):
+    session = stripe.checkout.Session.retrieve(request.GET['session_id'])
+    plan_id = session.client_reference_id
+    plan = models.SubPlan.objects.get(pk=plan_id)
+    user = request.user
+    models.Subscription.objects.create(
+        plan = plan,
+        user = user,
+        price = plan.price
+    )
     return render(request, 'success.html')
 
 #Payment_Cancel
