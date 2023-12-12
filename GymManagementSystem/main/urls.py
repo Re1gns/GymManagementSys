@@ -16,6 +16,8 @@ urlpatterns=[
     path('checkout_session/<int:plan_id>', views.checkout_session, name='checkout_session'),
     path('payment_success', views.payment_success, name='payment_success'),
     path('payment_cancel', views.payment_cancel, name='payment_cancel'),
+    path('user/dashboard', views.user_dashboard, name='user_dashboard'),
+    path('user/edit_profile', views.edit_profile, name='update_profile'),
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT )

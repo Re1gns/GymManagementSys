@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from . import models, forms
 import stripe
 from django.core.mail import EmailMessage
+from django.template.loader import get_template
 
 #Home Page
 def home(request):
@@ -97,8 +98,29 @@ def payment_success(request):
         user = user,
         price = plan.price
     )
+    subject = 'Order Confirmation'
+    html_content = get_template('orderemail.html').render({'title':plan.title})
+    from_email = 'lreigns12@gmail.com'
+    msg = EmailMessage(subject, html_content, from_email, ['vic@gmail.com'])
+    msg.content_subtype = "html"  # Main content is now text/html
+    msg.send()
     return render(request, 'success.html')
 
-#Payment_Cancel
+#Payment_Cancel View
 def payment_cancel(request):
     return render(request, 'cancel.html')
+
+#User Dashboard View
+def user_dashboard(request):
+    return render(request, 'user/dashboard.html')
+
+#Edit Profile View
+def edit_profile(request):
+    msg=None
+    if request.method == 'POST':
+        form = forms.EditProfile(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            msg="Profile Updated Successfully"
+    form = forms.EditProfile(instance=request.user)
+    return render(request, 'user/edit_profile.html', {'form':form, 'msg':msg})
