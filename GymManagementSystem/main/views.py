@@ -124,3 +124,27 @@ def edit_profile(request):
             msg="Profile Updated Successfully"
     form = forms.EditProfile(instance=request.user)
     return render(request, 'user/edit_profile.html', {'form':form, 'msg':msg})
+
+#Trainer Login View
+def trainerlogin(request):
+    msg = ''
+    if request.method=='POST':
+        username=request.POST['username']
+        pwd=request.POST['pwd']
+        trainer=models.Trainer.objects.filter(username=username, pwd=pwd).count()
+        if trainer > 0:
+            request.session['trainerLogin'] = True
+            return redirect('/trainer_dashboard')
+        else:
+            msg='Invalid'
+    form=forms.TrainerLogin
+    return render(request, 'trainer/login.html', {'form':form, 'msg':msg})
+
+#Trainer Login View
+def trainerlogout(request):
+    del request.session['trainerLogin']
+    return redirect('/trainerlogin')
+
+#Notification View
+def notification(request):
+    data = models.Notification.objects.all().order_by('-id')

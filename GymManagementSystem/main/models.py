@@ -132,3 +132,33 @@ class Subscription(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     plan=models.ForeignKey(SubPlan, on_delete=models.CASCADE, null=True)
     price=models.CharField(max_length=50)
+
+#Trainer
+class Trainer(models.Model):
+    Full_Name = models.CharField(max_length=100)
+    tel = models.CharField(max_length=100)
+    Email = models.EmailField()
+    username = models.CharField(max_length=100, null=True)
+    pwd = models.CharField(max_length=50, null=True)
+    Home_Address = models.TextField()
+    Is_active = models.BooleanField(default=False)
+    details = models.TextField()
+    img=models.ImageField(upload_to="Trainers/")
+
+    def __str__(self):
+        return str (self.Full_Name)
+    
+    def image_tag(self):
+        if self.img:
+            return mark_safe('<img src="%s" width="60" />' % (self.img.url))
+        else:
+            return "No_Image"
+        
+#Notification Model
+class Notification(models.Model):
+    notification_detail = models.TextField()
+    read_by_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    read_by_Trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return str (self.notification_detail)

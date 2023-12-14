@@ -17,3 +17,8 @@ class EditProfile(UserChangeForm):
     class Meta:
         model=User
         fields=('first_name', 'last_name', 'username', 'email')
+
+class TrainerLogin(forms.ModelForm):
+    class Meta:
+        model=models.Trainer
+        fields = ('username', 'pwd')

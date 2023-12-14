@@ -18,6 +18,8 @@ urlpatterns=[
     path('payment_cancel', views.payment_cancel, name='payment_cancel'),
     path('user/dashboard', views.user_dashboard, name='user_dashboard'),
     path('user/edit_profile', views.edit_profile, name='update_profile'),
+    path('trainerlogin', views.trainerlogin, name='trainerlogin'),
+    path('trainerlogout', views.trainerlogout, name='trainerlogout'),
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT )
