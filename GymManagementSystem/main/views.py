@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from . import models, forms
 import stripe
+from django.core import serializers
+from django.http import JsonResponse
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 
@@ -148,3 +150,11 @@ def trainerlogout(request):
 #Notification View
 def notification(request):
     data = models.Notification.objects.all().order_by('-id')
+    return render(request, 'notification.html', {'data':data})
+
+#Get Notifications View
+def get_notification(request):
+    data = models.Notification.objects.all().order_by('-id')
+    jsonData = serializers.serialize('json', data)
+    return JsonResponse({'data':jsonData})
+    

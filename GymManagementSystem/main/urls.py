@@ -20,7 +20,8 @@ urlpatterns=[
     path('user/edit_profile', views.edit_profile, name='update_profile'),
     path('trainerlogin', views.trainerlogin, name='trainerlogin'),
     path('trainerlogout', views.trainerlogout, name='trainerlogout'),
-    path('notification', views.notifications, name='notification'),
+    path('notification', views.notification, name='notification'),
+    path('get_notification', views.get_notification, name='get_notification'),
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT )
