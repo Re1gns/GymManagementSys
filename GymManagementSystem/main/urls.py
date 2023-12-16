@@ -22,6 +22,7 @@ urlpatterns=[
     path('trainerlogout', views.trainerlogout, name='trainerlogout'),
     path('notification', views.notification, name='notification'),
     path('get_notification', views.get_notification, name='get_notification'),
+    path('mark_read_notification', views.mark_read_notification, name='mark_read_notification'),
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT )

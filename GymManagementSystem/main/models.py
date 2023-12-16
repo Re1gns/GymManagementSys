@@ -162,3 +162,9 @@ class Notification(models.Model):
 
     def __str__(self):
         return str (self.notification_detail)
+    
+#Notiification MarkAsRead
+class NotifUserStatus(models.Model):
+    notif=models.ForeignKey(Notification, on_delete=models.CASCADE)
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    status=models.BooleanField(default=False)

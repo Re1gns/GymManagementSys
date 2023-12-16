@@ -68,7 +68,7 @@ def checkout(request, plan_id):
     return render(request, 'checkout.html', {'Plan':PlanDetail})
 
 #Checkout session
-stripe.api_key = 'sk_test_51KlzlxCxXy9cWFkINPAB3WbgMOW6hnNf4SCVFjb0OKutMxyh0EQHWgxtxx5vYu2vxHjDmItkJyhf5ROOxzvYASe900lw3jNHvX'
+stripe.api_key = ''
 def checkout_session(request, plan_id):
     plan=models.SubPlan.objects.get(pk=plan_id)
     session = stripe.checkout.Session.create(
@@ -116,6 +116,8 @@ def payment_cancel(request):
 def user_dashboard(request):
     return render(request, 'user/dashboard.html')
 
+#Change Password view
+
 #Edit Profile View
 def edit_profile(request):
     msg=None
@@ -157,4 +159,11 @@ def get_notification(request):
     data = models.Notification.objects.all().order_by('-id')
     jsonData = serializers.serialize('json', data)
     return JsonResponse({'data':jsonData})
-    
+
+#User Notifications_Mark_as Read View
+def mark_read_notification(request):
+    notif=request.GET['notif']
+    notif=models.Notification.objects.get(pk=notif)
+    user=request.user
+    models.NotifUserStatus.objects.create(notif=notif, user=user, status=True)
+    return JsonResponse({'bool':True})
