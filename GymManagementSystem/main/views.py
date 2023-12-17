@@ -157,7 +157,18 @@ def notification(request):
 #Get Notifications View
 def get_notification(request):
     data = models.Notification.objects.all().order_by('-id')
-    jsonData = serializers.serialize('json', data)
+    notifStatus=False
+    jsonData=[]
+    for d in data:
+        notifStatusData=models.NotifUserStatus.objects.get(user=request.user, notif=d)
+        if notifStatusData:
+            notifStatus=True
+        jsonData.append({
+                'pk':d.id,
+                'notification_detail':d.notification_detail,
+                'notifStatus':notifStatus
+            })
+    #jsonData = serializers.serialize('json', data)
     return JsonResponse({'data':jsonData})
 
 #User Notifications_Mark_as Read View

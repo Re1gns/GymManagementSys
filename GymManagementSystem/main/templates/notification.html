@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
+<style type="text/css">
+    .marked{
+        display: none;
+    }
+</style>
     <!-- Main Start -->
     <main>
 		<!-- Services -->
@@ -35,7 +40,7 @@
                     _html='';
                     _json=$.parseJSON(res.data);
                     $.each(_json,function(index,d){
-                        _html+='<li class="list-group-item bg-light list'+d.pk+'">'+d.fields.notification_detail+'<button data-index="'+d.pk+'" data-notif="'+d.pk+'" class="btn btn-sm btn-secondary float-end markreadbtn">MarkRead</button><i class="fa fa-checkbox"></i></li>';
+                        _html+='<li class="list-group-item bg-light list'+d.pk+'">'+d.fields.notification_detail+'<button data-index="'+d.pk+'" data-notification="'+d.pk+'" class="btn btn-sm btn-secondary float-end markreadbtn markreadbtn'+d.pk+'"">MarkRead</button><button class="float-end btn btn-success btn-sm marked marked'+d.pk+'"><i class="bi bi-check2-square"></i></button></li>';
                     });
                     $(".notification-list").html(_html);
                     $(".ajaxRes").hide();
@@ -44,13 +49,13 @@
         },5000);
 
         //Mark as read section
-        $(document).on("click","markreadbtn",function(){
+        $(document).on("click",".markreadbtn",function(){
             var _index=$(this).attr('data-index');
-            var _notif=$(this).attr('data-notif');
+            var _notif=$(this).attr('data-notification');
 
             $.ajax({
                 url:"{% url 'mark_read_notification' %}",
-                data{
+                data:{
                     notif:_notif
                 },
                 dataType:'json',
@@ -58,7 +63,11 @@
                     
                 },
                 success:function(res){
-                    console.log(res);
+                    if(res.bool==true){
+                        $(".list"+_index).removeClass('bg-light');
+                        $(".markreadbtn"+_index).hide();
+                        $(".marked"+_index).show();
+                    }
                 }
             });
 
