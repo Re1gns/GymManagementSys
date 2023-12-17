@@ -159,17 +159,23 @@ def get_notification(request):
     data = models.Notification.objects.all().order_by('-id')
     notifStatus=False
     jsonData=[]
+    TotalUnread=0
     for d in data:
-        notifStatusData=models.NotifUserStatus.objects.get(user=request.user, notif=d)
-        if notifStatusData:
-            notifStatus=True
+        try:
+            notifStatusData=models.NotifUserStatus.objects.get(user=request.user, notif=d)
+            if notifStatusData:
+                notifStatus=True
+        except models.NotifUserStatus.DoesNotExist:
+            notifStatus=False
+        if not notifStatus:
+            TotalUnread+=1
         jsonData.append({
                 'pk':d.id,
                 'notification_detail':d.notification_detail,
                 'notifStatus':notifStatus
             })
     #jsonData = serializers.serialize('json', data)
-    return JsonResponse({'data':jsonData})
+    return JsonResponse({'data':jsonData, 'TotalUnread':TotalUnread})
 
 #User Notifications_Mark_as Read View
 def mark_read_notification(request):

@@ -14,7 +14,7 @@
                     {% include 'user/left_sidebar.html' %}
                 </div>
                 <div class="col-9">
-                    <h3 class="mb-4 border-bottom pb-1">Notifications <span class="badge bg-primary">123</span></h3>
+                    <h3 class="mb-4 border-bottom pb-1">Notifications <span class="badge bg-primary totalunread"></span></h3>
                     <span class="ajaxRes"></span>
                     <ul class="list-group notification-list">
                         loading...
@@ -38,9 +38,13 @@
                 },
                 success:function(res){
                     _html='';
-                    _json=$.parseJSON(res.data);
-                    $.each(_json,function(index,d){
-                        _html+='<li class="list-group-item bg-light list'+d.pk+'">'+d.fields.notification_detail+'<button data-index="'+d.pk+'" data-notification="'+d.pk+'" class="btn btn-sm btn-secondary float-end markreadbtn markreadbtn'+d.pk+'"">MarkRead</button><button class="float-end btn btn-success btn-sm marked marked'+d.pk+'"><i class="bi bi-check2-square"></i></button></li>';
+                    $(".totalunread").text(res.TotalUnread)
+                    $.each(res.data,function(index,d){
+                        if(d.notifStatus==true){
+                            _html+='<li class="list-group-item list'+d.pk+'">'+d.notification_detail+'<button data-index="'+d.pk+'" data-notification="'+d.pk+'" class="btn btn-sm btn-secondary float-end markreadbtn markreadbtn'+d.pk+'"" style="display:none;">MarkRead</button><button class="float-end btn btn-success btn-sm marked'+d.pk+'"><i class="bi bi-check2-square"></i></button></li>';
+                        }else{
+                            _html+='<li class="list-group-item bg-light list'+d.pk+'">'+d.notification_detail+'<button data-index="'+d.pk+'" data-notification="'+d.pk+'" class="btn btn-sm btn-secondary float-end markreadbtn markreadbtn'+d.pk+'"">MarkRead</button><button class="float-end btn btn-success btn-sm marked marked'+d.pk+'"><i class="bi bi-check2-square"></i></button></li>';
+                        }
                     });
                     $(".notification-list").html(_html);
                     $(".ajaxRes").hide();

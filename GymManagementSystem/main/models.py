@@ -168,3 +168,11 @@ class NotifUserStatus(models.Model):
     notif=models.ForeignKey(Notification, on_delete=models.CASCADE)
     user=models.ForeignKey(User, on_delete=models.CASCADE)
     status=models.BooleanField(default=False)
+
+#Subscriber to Trainer Model
+class SubsToTrainer(models.Model):
+    subscriber= models.ForeignKey(Subscriber, on_delete=models.CASCADE)
+    trainer= models.ForeignKey(Trainer, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str (self.subscriber)
