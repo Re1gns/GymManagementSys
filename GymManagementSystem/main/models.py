@@ -84,6 +84,7 @@ class SubPlan(models.Model):
     price=models.IntegerField()
     max_member=models.IntegerField(null=True)
     highlight_status=models.BooleanField(default=False, null=True)
+    validity_period=models.IntegerField(null=True)
 
     def __str__(self):
         return self.title
