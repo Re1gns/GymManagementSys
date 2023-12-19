@@ -114,7 +114,24 @@ def payment_cancel(request):
 
 #User Dashboard View
 def user_dashboard(request):
-    return render(request, 'user/dashboard.html')
+    current_plan=models.Subscription.objects.get(user=request.user)
+    assigned_trainer=models.SubsToTrainer.objects.get(user=request.user)
+
+    #Notifications
+    data = models.Notification.objects.all().order_by('-id')
+    notifStatus=False
+    jsonData=[]
+    TotalUnread=0
+    for d in data:
+        try:
+            notifStatusData=models.NotifUserStatus.objects.get(user=request.user, notif=d)
+            if notifStatusData:
+                notifStatus=True
+        except models.NotifUserStatus.DoesNotExist:
+            notifStatus=False
+        if not notifStatus:
+            TotalUnread+=1
+    return render(request, 'user/dashboard.html', {'current_plan':current_plan, 'assigned_trainer':assigned_trainer, 'TotalUnread':TotalUnread})
 
 #Change Password view
 
