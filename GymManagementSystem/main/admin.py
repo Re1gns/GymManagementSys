@@ -49,12 +49,12 @@ class SubscriberAdmin(admin.ModelAdmin):
 admin.site.register(models.Subscriber, SubscriberAdmin)
 
 class SubscriptionAdmin(admin.ModelAdmin):
-    list_display=('user', 'plan', 'price')
+    list_display=('user', 'plan', 'sub_date', 'price')
 admin.site.register(models.Subscription, SubscriptionAdmin)
 
 class TrainerAdmin(admin.ModelAdmin):
     list_editable = ('Is_active',)
-    list_display=('Full_Name', 'Is_active', 'tel', 'image_tag')
+    list_display=('Full_Name', 'Is_active', 'salary', 'tel', 'image_tag')
 admin.site.register(models.Trainer, TrainerAdmin)
 
 class NotificationAdmin(admin.ModelAdmin):
@@ -68,3 +68,11 @@ admin.site.register(models.NotifUserStatus, NotifUserStatusAdmin)
 class SubsToTrainerAdmin(admin.ModelAdmin):
     list_display=('user', 'trainer')
 admin.site.register(models.SubsToTrainer, SubsToTrainerAdmin)
+
+class TrainersAchievementsAdmin(admin.ModelAdmin):
+    list_display=('title', 'image_tag')
+admin.site.register(models.TrainersAchievements, TrainersAchievementsAdmin)
+
+class TrainerSalaryAdmin(admin.ModelAdmin):
+    list_display=('trainer', 'amount', 'amount_date')
+admin.site.register(models.TrainerSalary, TrainerSalaryAdmin)

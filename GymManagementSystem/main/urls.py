@@ -20,6 +20,7 @@ urlpatterns=[
     path('user/edit_profile', views.edit_profile, name='update_profile'),
     path('trainerlogin', views.trainerlogin, name='trainerlogin'),
     path('trainerlogout', views.trainerlogout, name='trainerlogout'),
+    path('trainer_dashboard', views.trainerlogout, name='trainer_dashboard'),
     path('notification', views.notification, name='notification'),
     path('get_notification', views.get_notification, name='get_notification'),
     path('mark_read_notification', views.mark_read_notification, name='mark_read_notification'),

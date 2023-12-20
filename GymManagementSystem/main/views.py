@@ -5,6 +5,8 @@ from django.core import serializers
 from django.http import JsonResponse
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
+from django.db.models import Count
+from datetime import timedelta
 
 #Home Page
 def home(request):
@@ -47,7 +49,7 @@ def gallery_details(request, id):
 
 #Sub Plans
 def pricing(request):
-    pricing=models.SubPlan.objects.all().order_by('price')
+    pricing=models.SubPlan.objects.annotate(total_members=Count('subscription__id')).all().order_by('price')
     dfeatures=models.SubPlanFeature.objects.all()
     return render(request, 'pricing.html', {'plans':pricing, 'dfeatures':dfeatures})
 
@@ -116,6 +118,7 @@ def payment_cancel(request):
 def user_dashboard(request):
     current_plan=models.Subscription.objects.get(user=request.user)
     assigned_trainer=models.SubsToTrainer.objects.get(user=request.user)
+    enddate=current_plan.sub_date+timedelta(days=current_plan.plan.validity_period)
 
     #Notifications
     data = models.Notification.objects.all().order_by('-id')
@@ -131,7 +134,7 @@ def user_dashboard(request):
             notifStatus=False
         if not notifStatus:
             TotalUnread+=1
-    return render(request, 'user/dashboard.html', {'current_plan':current_plan, 'assigned_trainer':assigned_trainer, 'TotalUnread':TotalUnread})
+    return render(request, 'user/dashboard.html', {'current_plan':current_plan, 'assigned_trainer':assigned_trainer, 'TotalUnread':TotalUnread, 'enddate':enddate})
 
 #Change Password view
 
@@ -161,10 +164,14 @@ def trainerlogin(request):
     form=forms.TrainerLogin
     return render(request, 'trainer/login.html', {'form':form, 'msg':msg})
 
-#Trainer Login View
+#Trainer Logout View
 def trainerlogout(request):
     del request.session['trainerLogin']
     return redirect('/trainerlogin')
+
+#Trainer Dashboard
+def trainer_dashboard(request):
+    return render(request, 'trainer/dashboard.html')
 
 #Notification View
 def notification(request):

@@ -1,7 +1,7 @@
 <div class="list-group">
-    <a href="{% url 'user_dashboard' %}" class="list-group-item {% if request.path == '/user/dashboard' %} active {% endif %}">Dashboard</a>
-    <a href="{% url 'update_profile' %}" class="list-group-item {% if request.path == '/user/edit_profile' %} active {% endif %}">Edit Profile</a>
-    <a href="{% url 'password_change' %}" class="list-group-item {% if request.path == '/accounts/password_change/' %} active {% endif %}">Change Password</a>
-    <a href="{% url 'notification' %}" class="list-group-item {% if request.path == '/notification' %} active {% endif %}">Notifications<span class="float-end badge bg-danger mt-1">{{TotalUnread}}</span></a>
-    <a href="#" class="list-group-item {% if request.path == '' %} active {% endif %}">Messages</a>
+    <a href="{% url 'user_dashboard' %}" class="list-group-item {% if request.path == '/user/dashboard' %} active {% endif %}"><i class="bi bi-chevron-double-right float-left me-4 text-white"></i>Dashboard</a>
+    <a href="{% url 'update_profile' %}" class="list-group-item {% if request.path == '/user/edit_profile' %} active {% endif %}"><i class="bi bi-chevron-double-right float-left me-4 text-white"></i>Edit Profile</a>
+    <a href="{% url 'password_change' %}" class="list-group-item {% if request.path == '/accounts/password_change/' %} active {% endif %}"><i class="bi bi-chevron-double-right float-left me-4 text-white"></i>Change Password</a>
+    <a href="{% url 'notification' %}" class="list-group-item {% if request.path == '/notification' %} active {% endif %}"><i class="bi bi-chevron-double-right float-left me-4 text-white"></i>Notifications<span class="float-end badge bg-danger mt-1">{{TotalUnread}}</span></a>
+    <a href="#" class="list-group-item {% if request.path == '' %} active {% endif %}"><i class="bi bi-chevron-double-right float-left me-4 text-white"></i>Messages</a>
 </div>

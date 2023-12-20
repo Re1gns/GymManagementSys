@@ -9,6 +9,9 @@ class Banners(models.Model):
     img = models.ImageField(upload_to="banners/")
     alt_text = models.CharField(max_length=150)
 
+    class Meta:
+        verbose_name_plural="Banners"
+
     def __str__(self):
         return self.alt_text
     
@@ -51,6 +54,9 @@ class Enquiry(models.Model):
     details=models.TextField()
     send_time=models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name_plural="Enquiries"
+
     def __str__(self) -> str:
         return self.full_name
     
@@ -59,6 +65,9 @@ class Gallery(models.Model):
     img=models.ImageField(upload_to='gallery/', null=True)
     title=models.CharField(max_length=150)
     details=models.TextField()
+
+    class Meta:
+        verbose_name_plural="Galleries"
 
     def __str__(self):
         return self.title
@@ -133,6 +142,7 @@ class Subscription(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     plan=models.ForeignKey(SubPlan, on_delete=models.CASCADE, null=True)
     price=models.CharField(max_length=50)
+    sub_date=models.DateField(auto_now_add=True, null=True)
 
 #Trainer
 class Trainer(models.Model):
@@ -145,6 +155,13 @@ class Trainer(models.Model):
     Is_active = models.BooleanField(default=False)
     details = models.TextField()
     img=models.ImageField(upload_to="Trainers/")
+    salary=models.IntegerField(default=0)
+    
+    #Social Links
+    facebook = models.URLField(null=True)
+    twitter = models.URLField(null=True)
+    instagram = models.URLField(null=True)
+    youtube = models.URLField(null=True)
 
     def __str__(self):
         return str (self.Full_Name)
@@ -170,6 +187,9 @@ class NotifUserStatus(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE)
     status=models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name_plural="Notification Status"
+
 #Assign Subscribers to Trainer Model
 class SubsToTrainer(models.Model):
     user= models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -177,3 +197,32 @@ class SubsToTrainer(models.Model):
 
     def __str__(self):
         return str (self.user)
+    
+#Trainer's Achievements
+class TrainersAchievements(models.Model):
+    trainer= models.ForeignKey(Trainer, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    details = models.TextField()
+    img=models.ImageField(upload_to="Trainers_Acheievements/")
+
+    def image_tag(self):
+        if self.img:
+            return mark_safe('<img src="%s" width="60" />' % (self.img.url))
+        else:
+            return "No_Image"
+    
+    def __str__(self):
+        return str (self.title)
+    
+#Trainer Salary model
+class TrainerSalary(models.Model):
+    trainer=models.ForeignKey(Trainer, on_delete=models.CASCADE)
+    amount=models.IntegerField()
+    amount_date=models.DateField()
+    remarks=models.TextField(blank=True)
+
+    class Meta:
+        verbose_name_plural="Trainer's Salaries"
+
+    def __str__(self):
+        return str (self.trainer.Full_Name)
