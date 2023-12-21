@@ -158,6 +158,7 @@ def trainerlogin(request):
         trainer=models.Trainer.objects.filter(username=username, pwd=pwd).count()
         if trainer > 0:
             request.session['trainerLogin'] = True
+            msg='success'
             return redirect('/trainer_dashboard')
         else:
             msg='Invalid'
