@@ -157,7 +157,9 @@ def trainerlogin(request):
         pwd=request.POST['pwd']
         trainer=models.Trainer.objects.filter(username=username, pwd=pwd).count()
         if trainer > 0:
+            trainer=models.Trainer.objects.filter(username=username, pwd=pwd).first()
             request.session['trainerLogin'] = True
+            request.session['trainerid'] = trainer.id
             msg='success'
             return redirect('/trainer_dashboard')
         else:
@@ -173,6 +175,19 @@ def trainerlogout(request):
 #Trainer Dashboard
 def trainer_dashboard(request):
     return render(request, 'trainer/dashboard.html')
+
+#Trainer Profile Update
+def trainer_profile(request):
+    trainer_id=request.session['trainerid']
+    trainer=models.Trainer.objects.get(id=trainer_id)
+    msg=None
+    if request.method == 'POST':
+        form=forms.TrainerProfile(request.POST, request.FILES, instance=trainer)
+        if form.is_valid():
+            form.save()
+            msg='Profile updated successfully!'
+    form=forms.TrainerProfile(instance=trainer)
+    return render(request, 'trainer/profile.html', {'form':form, 'msg':msg})
 
 #Notification View
 def notification(request):
@@ -209,3 +224,29 @@ def mark_read_notification(request):
     user=request.user
     models.NotifUserStatus.objects.create(notif=notif, user=user, status=True)
     return JsonResponse({'bool':True})
+
+#Assigned Subscribers View
+def assigned_subscribers(request):
+    trainer=models.Trainer.objects.get(pk=request.session['trainerid'])
+    assigned_subs=models.SubsToTrainer.objects.filter(trainer=trainer).order_by('-id')
+    return render(request, 'trainer/assigned_subs.html', {'assigned_subs':assigned_subs})
+
+#Trainer's Salary View
+def trainer_salary(request):
+    trainer=models.Trainer.objects.get(pk=request.session['trainerid'])
+    trainer_salaries=models.TrainerSalary.objects.filter(trainer=trainer).order_by('-id')
+    return render(request, 'trainer/salary.html', {'trainer_salaries':trainer_salaries})
+
+#Trainer Change Password
+def trainer_changepassword(request):
+    msg=None
+    if request.method=='POST':
+        new_password=request.POST['new_password']
+        updateRes=models.Trainer.objects.filter(pk=request.session['trainerid']).update(pwd=new_password)
+        if updateRes:
+            del request.session['trainerLogin']
+            return redirect('/trainerlogin')
+        else:
+            msg='Something went wrong!!!'
+    form=forms.TrainerChangePassword
+    return render(request, 'trainer/trainer_changepassword.html', {'form':form, 'msg':msg})
