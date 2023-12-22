@@ -30,6 +30,7 @@ urlpatterns=[
     path('assigned_subscribers', views.assigned_subscribers, name='assigned_subscribers'),
     path('trainer_salary', views.trainer_salary, name='trainer_salary'),
     path('trainer_changepassword', views.trainer_changepassword, name='trainer_changepassword'),
+    path('trainer_notification', views.trainer_notification, name='trainer_notification'),
 
     #Notification Urls
     path('notification', views.notification, name='notification'),

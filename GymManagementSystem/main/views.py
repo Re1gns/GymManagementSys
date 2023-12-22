@@ -250,3 +250,8 @@ def trainer_changepassword(request):
             msg='Something went wrong!!!'
     form=forms.TrainerChangePassword
     return render(request, 'trainer/trainer_changepassword.html', {'form':form, 'msg':msg})
+
+#Trainer's Notification View
+def trainer_notification(request):
+    data = models.TrainerNotification.objects.all().order_by('-id')
+    return render(request, 'trainer/notification.html', {'notification':data})

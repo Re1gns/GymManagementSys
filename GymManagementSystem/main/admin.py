@@ -76,3 +76,7 @@ admin.site.register(models.TrainersAchievements, TrainersAchievementsAdmin)
 class TrainerSalaryAdmin(admin.ModelAdmin):
     list_display=('trainer', 'amount', 'amount_date')
 admin.site.register(models.TrainerSalary, TrainerSalaryAdmin)
+
+class TrainerNotificationAdmin(admin.ModelAdmin):
+    list_display=('notif_msg',)
+admin.site.register(models.TrainerNotification, TrainerNotificationAdmin)

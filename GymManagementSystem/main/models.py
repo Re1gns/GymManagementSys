@@ -172,7 +172,7 @@ class Trainer(models.Model):
         else:
             return "No_Image"
         
-#Notification Model
+#Subscriber Notification Model
 class Notification(models.Model):
     notification_detail = models.TextField()
     read_by_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -188,7 +188,7 @@ class NotifUserStatus(models.Model):
     status=models.BooleanField(default=False)
 
     class Meta:
-        verbose_name_plural="Notification Status"
+        verbose_name_plural="User Notification Status"
 
 #Assign Subscribers to Trainer Model
 class SubsToTrainer(models.Model):
@@ -226,3 +226,19 @@ class TrainerSalary(models.Model):
 
     def __str__(self):
         return str (self.trainer.Full_Name)
+    
+#Trainer Notification Model
+class TrainerNotification(models.Model):
+    notif_msg=models.TextField()
+
+    def __str__(self):
+        return str (self.notif_msg)
+    
+#Notiification MarkAsRead By Trainer
+class NotifTrainerStatus(models.Model):
+    notif=models.ForeignKey(TrainerNotification, on_delete=models.CASCADE)
+    trainer=models.ForeignKey(Trainer, on_delete=models.CASCADE)
+    status=models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name_plural="Trainer Notification Status"
