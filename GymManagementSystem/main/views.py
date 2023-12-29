@@ -255,3 +255,8 @@ def trainer_changepassword(request):
 def trainer_notification(request):
     data = models.TrainerNotification.objects.all().order_by('-id')
     return render(request, 'trainer/notification.html', {'notification':data})
+
+#Trainer messages View
+def trainer_msgs(request):
+    data = models.TrainerMsg.objects.all().order_by('-id')
+    return render(request, 'trainer/messages.html', {'messages':data})
