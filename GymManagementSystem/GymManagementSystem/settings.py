@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
+    'channels',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -70,7 +72,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'GymManagementSystem.wsgi.application'
+# WSGI_APPLICATION = 'GymManagementSystem.wsgi.application'
+ASGI_APPLICATION = 'GymManagementSystem.asgi.application'
 
 
 # Database
@@ -165,3 +168,12 @@ LOGIN_REDIRECT_URL='home'
 LOGOUT_REDIRECT_URL='login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
