@@ -31,6 +31,7 @@ urlpatterns=[
     path('trainer_salary', views.trainer_salary, name='trainer_salary'),
     path('trainer_changepassword', views.trainer_changepassword, name='trainer_changepassword'),
     path('trainer_notification', views.trainer_notification, name='trainer_notification'),
+    path('mark_read_trainer_notification', views.mark_read_trainer_notification, name='mark_read_trainer_notification'),
 
     #Notification Urls
     path('notification', views.notification, name='notification'),

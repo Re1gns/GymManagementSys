@@ -8,10 +8,12 @@ class NotificationConsumer(WebsocketConsumer):
             self.group_name, self.channel_name
         )
         self.accept()
-        self.send(text_data="Group created")
     
     def receive(self, text_data=None):
         self.send(text_data="Hello World!")
     
     def disconnect(self, close_code):
         self.close(close_code)
+
+    def send_notification(self, event):
+        self.send(event.get('value'))

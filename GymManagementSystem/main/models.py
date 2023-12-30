@@ -3,6 +3,9 @@ from django.utils.html import mark_safe
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+import json
 
 #Banners Model
 class Banners(models.Model):
@@ -234,6 +237,18 @@ class TrainerNotification(models.Model):
     def __str__(self):
         return str (self.notif_msg)
     
+    def save(self, *args, **kwargs):
+        super(TrainerNotification, self).save(*args, **kwargs)
+        channel_layer = get_channel_layer()
+        notif = self.notif_msg
+        total = TrainerNotification.objects.all().count()
+        async_to_sync(channel_layer.group_send)(
+            'noti_group_name',{
+                'type':'send_notification',
+                'value':json.dumps({'notif':notif, 'total':total})
+            }
+        )
+    
 #Notiification MarkAsRead By Trainer
 class NotifTrainerStatus(models.Model):
     notif=models.ForeignKey(TrainerNotification, on_delete=models.CASCADE)
@@ -251,3 +266,11 @@ class TrainerMsg(models.Model):
 
     class Meta:
         verbose_name_plural="Trainer Messages"
+
+#Reports
+class TrainerSubscriberReport(models.Model):
+    report_for_trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, null=True, related_name='report_for_trainer')
+    report_for_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,related_name='report_for_user')
+    report_from_trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, null=True, related_name='report_from_trainer')
+    report_from_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='report_from_user')
+    report_msg = models.TextField()
