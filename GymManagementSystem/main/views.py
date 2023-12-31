@@ -20,6 +20,11 @@ def page_details(request, id):
     page=models.Page.objects.get(id=id)
     return render (request, 'page.html', {'page':page})
 
+#Services Details
+def service_details(request, id):
+    service_details=models.Service.objects.get(id=id)
+    return render (request, 'services.html', {'service_details':service_details})
+
 #FAQ
 def faq_list(request):
     faq=models.FAQ.objects.all()

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Main Start -->
+<main>
+    <!-- Services -->
+    <section class="container my-4">
+        <!-- services_detail.html -->
+        <h1>{{ service_details.title }}</h1>
+        <img src="{{ service_details.img.url }}" alt="{{ service_details.title }}">
+        <p>{{ service_details.details }}</p>
+
+    </section>
+    <!-- End -->
+</main>  
+
+<script type="text/javascript" src="assets/lightbox2-2.11.3/dist/js/lightbox.min.js"></script>
+<link rel="stylesheet" type="text/css" href="assets/lightbox2-2.11.3/dist/css/lightbox.min.css" />
+{% endblock %}

@@ -7,6 +7,7 @@ urlpatterns=[
     #General Urls
     path('',views.home, name='home'),
     path('pagedetail/<int:id>',views.page_details, name='pagedetail'),
+    path('servicedetail/<int:id>',views.service_details, name='servicedetail'),
     path('faq', views.faq_list, name='faq'),
     path('enquiry', views.enquiry, name='enquiry'),
     path('contact_us', views.contact_us, name='contact_us'),
