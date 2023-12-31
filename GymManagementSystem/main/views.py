@@ -25,6 +25,10 @@ def faq_list(request):
     faq=models.FAQ.objects.all()
     return render (request, 'faq.html', {'faqs':faq})
 
+#FAQ
+def contact_us(request):
+    return render (request, 'contact_us.html')
+
 #Enquiry
 def enquiry(request):
     msg = ''
@@ -300,3 +304,45 @@ def mark_read_trainer_notification(request):
 def trainer_msgs(request):
     data = models.TrainerMsg.objects.all().order_by('-id')
     return render(request, 'trainer/messages.html', {'messages':data})
+
+from django.shortcuts import redirect
+
+# Report For User
+def report_a_trainer(request):
+    user = request.user
+    msg = ''
+
+    if request.method == 'POST':
+        form = forms.ReportATrainerForm(request.POST)
+        if form.is_valid():
+            new_form = form.save(commit=False)
+            new_form.reporting_user = user
+            new_form.save()
+            msg = 'Report submitted and will be treated with urgency!'
+        else:
+            msg = 'Invalid!!!'
+    else:
+        # Instantiate the form with the initial value for report_from_trainer
+        form = forms.ReportATrainerForm(initial={'reporting_user': user.id})
+
+    return render(request, 'report_a_trainer.html', {'form': form, 'msg': msg})
+
+# Report For User
+def report_a_user(request):
+    trainer = models.Trainer.objects.get(id=request.session.get('trainerid'))
+    msg = ''
+
+    if request.method == 'POST':
+        form = forms.ReportAUserForm(request.POST)
+        if form.is_valid():
+            new_form = form.save(commit=False)
+            new_form.reporting_trainer = trainer
+            new_form.save()
+            msg = 'Report submitted and will be treated with urgency!'
+        else:
+            msg = 'Invalid!!!'
+    else:
+        # Instantiate the form with the initial value for report_from_trainer
+        form = forms.ReportAUserForm(initial={'reporting_trainer': trainer.id})
+
+    return render(request, 'report_a_user.html', {'form': form, 'msg': msg})

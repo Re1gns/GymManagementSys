@@ -31,12 +31,15 @@ class TrainerProfile(forms.ModelForm):
 class TrainerChangePassword(forms.Form):
     new_password=forms.CharField(max_length=50, required=True)
 
-class ReportForTrainerForm(forms.ModelForm):
+class ReportATrainerForm(forms.ModelForm):
     class Meta:
         model=models.TrainerSubscriberReport
-        fields = ('report_for_user', 'report_msg')
+        fields = ('report_a_trainer', 'report_msg', 'reporting_user')
+        widgets = {'reporting_user': forms.HiddenInput()}
 
-class ReportForUserForm(forms.ModelForm):
+class ReportAUserForm(forms.ModelForm):
     class Meta:
         model=models.TrainerSubscriberReport
-        fields = ('report_for_trainer', 'report_msg')
+        fields = ('report_a_user', 'report_msg', 'reporting_trainer')
+        widgets = {'reporting_trainer': forms.HiddenInput()}
+

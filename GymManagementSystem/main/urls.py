@@ -9,6 +9,7 @@ urlpatterns=[
     path('pagedetail/<int:id>',views.page_details, name='pagedetail'),
     path('faq', views.faq_list, name='faq'),
     path('enquiry', views.enquiry, name='enquiry'),
+    path('contact_us', views.contact_us, name='contact_us'),
     path('gallery', views.gallery, name='gallery'),
     path('gallery_details/<int:id>', views.gallery_details, name='gallery_details'),
 
@@ -40,6 +41,8 @@ urlpatterns=[
 
     #Messages Urls
     path('messages', views.trainer_msgs, name='messages'),
+    path('report_a_user', views.report_a_user, name='report_a_user'),
+    path('report_a_trainer', views.report_a_trainer, name='report_a_trainer'),
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT )

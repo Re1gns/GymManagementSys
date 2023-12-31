@@ -269,8 +269,8 @@ class TrainerMsg(models.Model):
 
 #Reports
 class TrainerSubscriberReport(models.Model):
-    report_for_trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, null=True, related_name='report_for_trainer')
-    report_for_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,related_name='report_for_user')
-    report_from_trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, null=True, related_name='report_from_trainer')
-    report_from_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='report_from_user')
+    report_a_trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, null=True, related_name='report_a_trainer')
+    report_a_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,related_name='report_a_user')
+    reporting_trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, null=True, related_name='reporting_trainer')
+    reporting_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='reporting_user')
     report_msg = models.TextField()
