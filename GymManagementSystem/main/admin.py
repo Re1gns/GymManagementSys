@@ -92,3 +92,7 @@ admin.site.register(models.TrainerMsg, TrainerMsgAdmin)
 class TrainerSubscriberReportAdmin(admin.ModelAdmin):
     list_display=('report_msg', 'report_a_user', 'report_a_trainer', 'reporting_trainer', 'reporting_user')
 admin.site.register(models.TrainerSubscriberReport, TrainerSubscriberReportAdmin)
+
+class AppSettingsAdmin(admin.ModelAdmin):
+    list_display = ('image_tag',)
+admin.site.register(models.AppSettings, AppSettingsAdmin)

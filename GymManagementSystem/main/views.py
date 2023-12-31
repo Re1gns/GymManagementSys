@@ -25,7 +25,7 @@ def faq_list(request):
     faq=models.FAQ.objects.all()
     return render (request, 'faq.html', {'faqs':faq})
 
-#FAQ
+#Contact Page
 def contact_us(request):
     return render (request, 'contact_us.html')
 

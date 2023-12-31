@@ -274,3 +274,9 @@ class TrainerSubscriberReport(models.Model):
     reporting_trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, null=True, related_name='reporting_trainer')
     reporting_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='reporting_user')
     report_msg = models.TextField()
+
+class AppSettings(models.Model):
+    app_logo = models.ImageField(upload_to='logo/')
+
+    def image_tag(self):
+        return mark_safe('<img src="%s" width="30" />' % (self.app_logo.url))
