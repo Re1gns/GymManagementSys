@@ -25,11 +25,11 @@
                         <div class="col-md-6">
                             <div class="card">
                                 <h5 class="card-header">Assigned Trainer</h5>
-                                <img class="card-img-top" 
-                                    src="{{ assigned_trainer.trainer.img.url }}" 
-                                    alt="{{ assigned_trainer.trainer }}"
-                                    style="padding: 10px; max-width: 100%; object-fit: cover;">
-                                <div class="card-body">
+                                <div class="card-body text-center">
+                                    <!-- Trainer profile picture in a circular container -->
+                                    <div class="rounded-circle mx-auto" style="width: 100px; height: 100px; overflow: hidden;">
+                                        <img src="{{ assigned_trainer.trainer.profile_picture.url }}" alt="{{ assigned_trainer.trainer }}" class="img-fluid rounded-circle">
+                                    </div>
                                     <h6 class="card-text">{{assigned_trainer.trainer}}</h6>
                                 </div>
                                 <div class="card-footer">

@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 urlpatterns=[
     #General Urls
@@ -17,6 +18,7 @@ urlpatterns=[
     #User Urls
     path('pricing', views.pricing, name='pricing'),
     path('accounts/signup', views.signup, name='signup'),
+    path('change_password/', auth_views.PasswordChangeView.as_view(template_name='registration/change_password.html', success_url='/password_change_done/'), name='change_password'),
     path('checkout/<int:plan_id>', views.checkout, name='checkout'),
     path('checkout_session/<int:plan_id>', views.checkout_session, name='checkout_session'),
     path('payment_success', views.payment_success, name='payment_success'),

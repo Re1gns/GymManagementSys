@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     "daphne",
     'channels',
     'jazzmin',
+    'ckeditor',
+    'ckeditor_uploader',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -112,6 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
+CKEDITOR_UPLOAD_PATH = "uploads/"
 
 
 # Internationalization

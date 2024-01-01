@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.html import mark_safe
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from ckeditor.fields import RichTextField
 from django.dispatch import receiver
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -24,7 +25,7 @@ class Banners(models.Model):
 # Services Model
 class Service(models.Model):
     title=models.CharField(max_length=150)
-    details=models.TextField()
+    details=RichTextField()
     img = models.ImageField(upload_to="services/", null=True)
 
     def __str__(self):
@@ -36,7 +37,7 @@ class Service(models.Model):
 #Pages
 class Page(models.Model):
     title=models.CharField(max_length=200)
-    detail=models.TextField()
+    detail=RichTextField()
 
     def __str__(self):
         return self.title
@@ -44,7 +45,7 @@ class Page(models.Model):
 #FAQ
 class FAQ(models.Model):
     question=models.TextField()
-    answer=models.TextField()
+    answer=RichTextField()
 
     def __str__(self):
         return self.question
@@ -54,7 +55,7 @@ class Enquiry(models.Model):
     full_name=models.CharField(max_length=150)
     email=models.CharField(max_length=150)
     phone_number=models.IntegerField()
-    details=models.TextField()
+    details=RichTextField()
     send_time=models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -67,7 +68,7 @@ class Enquiry(models.Model):
 class Gallery(models.Model):
     img=models.ImageField(upload_to='gallery/', null=True)
     title=models.CharField(max_length=150)
-    details=models.TextField()
+    details=RichTextField()
 
     class Meta:
         verbose_name_plural="Galleries"
@@ -156,8 +157,8 @@ class Trainer(models.Model):
     pwd = models.CharField(max_length=50, null=True)
     Home_Address = models.TextField()
     Is_active = models.BooleanField(default=False)
-    details = models.TextField()
-    img=models.ImageField(upload_to="Trainers/")
+    details = RichTextField()
+    profile_picture=models.ImageField(upload_to="Trainers/")
     salary=models.IntegerField(default=0)
     
     #Social Links
@@ -170,14 +171,14 @@ class Trainer(models.Model):
         return str (self.Full_Name)
     
     def image_tag(self):
-        if self.img:
-            return mark_safe('<img src="%s" width="60" />' % (self.img.url))
+        if self.profile_picture:
+            return mark_safe('<img src="%s" width="60" />' % (self.profile_picture.url))
         else:
             return "No_Image"
         
 #Subscriber Notification Model
 class Notification(models.Model):
-    notification_detail = models.TextField()
+    notification_detail = RichTextField()
     read_by_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     read_by_Trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -205,7 +206,7 @@ class SubsToTrainer(models.Model):
 class TrainersAchievements(models.Model):
     trainer= models.ForeignKey(Trainer, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    details = models.TextField()
+    details = RichTextField()
     img=models.ImageField(upload_to="Trainers_Acheievements/")
 
     def image_tag(self):
@@ -232,7 +233,7 @@ class TrainerSalary(models.Model):
     
 #Trainer Notification Model
 class TrainerNotification(models.Model):
-    notif_msg=models.TextField()
+    notif_msg=RichTextField()
 
     def __str__(self):
         return str (self.notif_msg)
@@ -262,7 +263,7 @@ class NotifTrainerStatus(models.Model):
 class TrainerMsg(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     trainer=models.ForeignKey(Trainer, on_delete=models.CASCADE, null=True)
-    message=models.TextField()
+    message=RichTextField()
 
     class Meta:
         verbose_name_plural="Trainer Messages"
@@ -273,10 +274,10 @@ class TrainerSubscriberReport(models.Model):
     report_a_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,related_name='report_a_user')
     reporting_trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, null=True, related_name='reporting_trainer')
     reporting_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='reporting_user')
-    report_msg = models.TextField()
+    report_msg = RichTextField()
 
 class AppSettings(models.Model):
     app_logo = models.ImageField(upload_to='logo/')
 
     def image_tag(self):
-        return mark_safe('<img src="%s" width="30" />' % (self.app_logo.url))
+        return mark_safe('<img src="%s" width="50" />' % (self.app_logo.url))

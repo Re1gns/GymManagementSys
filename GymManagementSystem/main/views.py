@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from . import models, forms
 import stripe
 from django.core import serializers
@@ -7,13 +7,15 @@ from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.db.models import Count
 from datetime import timedelta
+from .models import Page, Trainer
 
 #Home Page
 def home(request):
     banners=models.Banners.objects.all()
     services=models.Service.objects.all()[:3]
     gimgs=models.GalleryImage.objects.all().order_by('-id') [:9]
-    return render(request, 'home.html', {'banners':banners, 'services':services, 'gimgs':gimgs})
+    about_us_page = Page.objects.get(id=1)
+    return render(request, 'home.html', {'banners':banners, 'services':services, 'gimgs':gimgs, 'about_us_page': about_us_page})
 
 #Page details
 def page_details(request, id):
@@ -145,7 +147,6 @@ def user_dashboard(request):
             TotalUnread+=1
     return render(request, 'user/dashboard.html', {'current_plan':current_plan, 'assigned_trainer':assigned_trainer, 'TotalUnread':TotalUnread, 'enddate':enddate})
 
-#Change Password view
 
 #Edit Profile View
 def edit_profile(request):
@@ -183,7 +184,14 @@ def trainerlogout(request):
 
 #Trainer Dashboard
 def trainer_dashboard(request):
-    return render(request, 'trainer/dashboard.html')
+    # Check if the trainer is logged in
+    if 'trainerid' in request.session:
+        trainer_id = request.session['trainerid']
+        trainer = get_object_or_404(Trainer, id=trainer_id)
+        return render(request, 'trainer/dashboard.html', {'trainer': trainer})
+    else:
+        # Handle the case where the trainer is not logged in
+        return redirect('trainerlogin')
 
 #Trainer Profile Update
 def trainer_profile(request):

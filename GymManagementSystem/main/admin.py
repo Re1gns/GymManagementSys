@@ -1,5 +1,6 @@
 from django.contrib import admin
 from . import models
+from ckeditor.widgets import CKEditorWidget
 
 class BannerAdmin(admin.ModelAdmin):
     list_display=('alt_text', 'image_tag')

@@ -1,0 +1,43 @@
+<!-- trainer_details.html -->
+<div class="container mt-4">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th colspan="3" class="text-center">
+                        Basic Details
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center" style="width: 150px;">
+                        <!-- Trainer profile picture in a circular container -->
+                        <div class="rounded-circle mx-auto" style="width: 100px; height: 100px; overflow: hidden;">
+                            <img src="{{ trainer.profile_picture.url }}" alt="Trainer Profile" class="img-fluid">
+                        </div>
+                        <p class="card-text"></p>
+                        <p class="card-text">Profile Picture</p>
+                    </td>
+                    <th style="width: 150px;">
+                        <p class="card-text">Name</p>
+                        <p class="card-text">Phone Number</p>
+                        <p class="card-text">Email</p>
+                        <p class="card-text">Salary Plan</p>
+                    </th>
+                    <td>
+                        <div class="card-body">
+                            <!-- Trainer name, phone number, and email address -->
+                            <p class="card-text">{{ trainer.Full_Name }}</p>
+                            <p class="card-text">{{ trainer.tel }}</p>
+                            <p class="card-text">{{ trainer.Email }}</p>
+                            <p class="card-text">${{ trainer.salary }}</p>
+                            <!-- Other details can be added here -->
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
