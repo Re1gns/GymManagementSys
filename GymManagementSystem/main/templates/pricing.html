@@ -2,6 +2,7 @@
 {% load static %}
 {% load check_package %}
 {% load mathfilters %}
+
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-icons/font/bootstrap-icons.css' %}" />
 <section class="container my-4">
@@ -9,12 +10,12 @@
   <main>
     <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
       {% for plan in plans %}
-      <div class="col">
-        <div class="card mb-4 rounded-3 shadow-sm {% if plan.highlight_status %} border-primary {% endif %} ">
-          {% if plan.highlight_status %}
-          <div class="card-header py-3 text-white bg-primary border-primary">
+        <div class="col">
+          <div class="card mb-4 rounded-3 shadow-sm {% if plan.highlight_status %} border-primary {% endif %}">
+            {% if plan.highlight_status %}
+              <div class="card-header py-3 text-white bg-primary border-primary">
             {% else %}
-            <div class="card-header py-3">
+              <div class="card-header py-3">
             {% endif %}
             <h4 class="my-0 fw-normal">{{plan.title}}</h4>
           </div>
@@ -23,31 +24,22 @@
             <p class="text-success">Max Users Allowed {{plan.max_member|sub:plan.total_members}}</p>
             <ul class="list-unstyled mt-3 mb-4">
               {% for feature in plan.subplanfeature_set.all %}
-              <li>{{feature.title}}</li>
+                <li>{{feature.title}}</li>
               {% endfor %}
             </ul>
-              {% check_purchased_package request.user.id plan.id as check_pkg %}
-              {% if check_pkg %}
-                <p class="text-danger">{% check_plan_validity request.user.id plan.id %} Days Left</p>
-              {% else %}
-              {% endif %}
 
-
-            {% if request.user.is_authenticated %}
             {% check_purchased_package request.user.id plan.id as check_pkg %}
-            {% check_plan_validity request.user.id plan.id as check_validity %}
             {% if check_pkg %}
-              {% if check_validity %}
+              {% check_plan_validity request.user.id plan.id as check_validity %}
+              {% if check_validity.0 %}
+                <p class="text-danger">{{ check_validity.1 }} Days Left</p>
                 <a href="#" class="w-100 btn btn-lg btn-dark disabled">Purchased</a>
               {% else %}
-              <a href="{% url 'checkout' plan.id %}" class="w-100 btn btn-lg btn-outline-primary">Get started</a>
+                <p class="text-danger">{{ check_validity.1 }} Days Left</p>
+                <a href="#" class="w-100 btn btn-lg btn-dark disabled">Purchased</a>
               {% endif %}
             {% else %}
-            <a href="{% url 'checkout' plan.id %}" class="w-100 btn btn-lg btn-outline-primary">Get started</a>
-            {% endif %}
-
-            {% else %}
-            <a href="{% url 'login' %}" class="w-100 btn btn-lg btn-outline-primary">Get started</a>
+              <a href="{% url 'checkout' plan.id %}" class="w-100 btn btn-lg btn-outline-primary">Get started</a>
             {% endif %}
           </div>
         </div>
@@ -63,24 +55,24 @@
           <tr>
             <th style="width: 34%;"></th>
             {% for plan in plans %}
-            <th style="width: 22%;">{{plan.title}}</th>
+              <th style="width: 22%;">{{plan.title}}</th>
             {% endfor %}
           </tr>
         </thead>
         <tbody>
           {% for feature in dfeatures %}
-          <tr>
-            <th scope="row" class="text-start">{{feature.title}}</th>
-            {% for plan in plans %}
-            <td>
-              {% if plan in feature.subplan.all %}
-              <i class="bi bi-check-lg"></i>
-              {% else %}
-              <i class="bi bi-x text-danger"></i>
-              {% endif %}
-            </td>
-            {% endfor %}
-          </tr>
+            <tr>
+              <th scope="row" class="text-start">{{feature.title}}</th>
+              {% for plan in plans %}
+                <td>
+                  {% if plan in feature.subplan.all %}
+                    <i class="bi bi-check-lg"></i>
+                  {% else %}
+                    <i class="bi bi-x text-danger"></i>
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
           {% endfor %}
         </tbody>
       </table>

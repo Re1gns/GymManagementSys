@@ -26,11 +26,15 @@
                             <div class="card">
                                 <h5 class="card-header">Assigned Trainer</h5>
                                 <div class="card-body text-center">
-                                    <!-- Trainer profile picture in a circular container -->
-                                    <div class="rounded-circle mx-auto" style="width: 100px; height: 100px; overflow: hidden;">
-                                        <img src="{{ assigned_trainer.trainer.profile_picture.url }}" alt="{{ assigned_trainer.trainer }}" class="img-fluid rounded-circle">
-                                    </div>
-                                    <h6 class="card-text">{{assigned_trainer.trainer}}</h6>
+                                    {% if assigned_trainer %}
+                                        <!-- Trainer profile picture in a circular container -->
+                                        <div class="rounded-circle mx-auto" style="width: 100px; height: 100px; overflow: hidden;">
+                                            <img src="{{ assigned_trainer.trainer.profile_picture.url }}" alt="{{ assigned_trainer.trainer }}" class="img-fluid rounded-circle">
+                                        </div>
+                                        <h6 class="card-text">{{ assigned_trainer.trainer }}</h6>
+                                    {% else %}
+                                        <p>Yet to be assigned a Trainer</p>
+                                    {% endif %}
                                 </div>
                                 <div class="card-footer">
                                     <a href="{{assigned_trainer.trainer.facebook}}"><i class="bi bi-facebook fs-3"></i></a>

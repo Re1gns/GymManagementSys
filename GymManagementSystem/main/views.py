@@ -8,6 +8,7 @@ from django.template.loader import get_template
 from django.db.models import Count
 from datetime import timedelta
 from .models import Page, Trainer
+from .templatetags.check_package import check_plan_validity
 
 #Home Page
 def home(request):
@@ -62,7 +63,14 @@ def gallery_details(request, id):
 def pricing(request):
     pricing=models.SubPlan.objects.annotate(total_members=Count('subscription__id')).all().order_by('price')
     dfeatures=models.SubPlanFeature.objects.all()
-    return render(request, 'pricing.html', {'plans':pricing, 'dfeatures':dfeatures})
+
+    countdown_values = {}
+    for pric in pricing:
+        check_validity = check_plan_validity(request.user.id, pric.id)
+        if check_validity[0]:
+            countdown_values[pric.id] = check_validity[1] * 86400000
+
+    return render(request, 'pricing.html', {'plans':pricing, 'dfeatures':dfeatures, 'countdown_values': countdown_values})
 
 #Signup
 def signup(request):
@@ -81,9 +89,13 @@ def checkout(request, plan_id):
     return render(request, 'checkout.html', {'Plan':PlanDetail})
 
 #Checkout session
-stripe.api_key = ''
+stripe.api_key = 'sk_test_51KlzlxCxXy9cWFkINPAB3WbgMOW6hnNf4SCVFjb0OKutMxyh0EQHWgxtxx5vYu2vxHjDmItkJyhf5ROOxzvYASe900lw3jNHvX'
 def checkout_session(request, plan_id):
     plan=models.SubPlan.objects.get(pk=plan_id)
+    selected_discount_id = request.POST.get('selected_discount_id')
+    selected_discount = models.PlanDiscount.objects.get(pk=selected_discount_id) if selected_discount_id else None
+    unit_amount = plan.price * 100 * (1 - selected_discount.total_discount / 100) if selected_discount else plan.price * 100
+
     session = stripe.checkout.Session.create(
         line_items=[{
             'price_data':{
@@ -91,7 +103,7 @@ def checkout_session(request, plan_id):
                 'product_data':{
                     'name':plan.title,
                 },
-                'unit_amount':plan.price*100
+                'unit_amount':int(unit_amount),
             },
             'quantity': 1,
         }],
@@ -127,9 +139,13 @@ def payment_cancel(request):
 
 #User Dashboard View
 def user_dashboard(request):
-    current_plan=models.Subscription.objects.get(user=request.user)
-    assigned_trainer=models.SubsToTrainer.objects.get(user=request.user)
-    enddate=current_plan.sub_date+timedelta(days=current_plan.plan.validity_period)
+    try:
+        current_plan=models.Subscription.objects.get(user=request.user)
+        assigned_trainer=models.SubsToTrainer.objects.get(user=request.user)
+        enddate=current_plan.sub_date+timedelta(days=current_plan.plan.validity_period)
+    except models.SubsToTrainer.DoesNotExist:
+        assigned_trainer = None
+        enddate = None
 
     #Notifications
     data = models.Notification.objects.all().order_by('-id')

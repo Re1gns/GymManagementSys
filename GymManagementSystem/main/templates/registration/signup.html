@@ -29,8 +29,14 @@
 		</section>
 		<!-- End -->
     </main>
-    <!-- End -->
+    <!-- End --> 
 {% else %}
 	<p class="text-success col-md-10 offset-5">Already Logged In!</p>
 {% endif %}
+<script>
+	// Wait for 2 seconds (2000 milliseconds) and then redirect to the pricing page
+	setTimeout(function() {
+	  window.location.href = "{% url 'login' %}";
+	}, 2000);
+  </script>
 {% endblock %}
