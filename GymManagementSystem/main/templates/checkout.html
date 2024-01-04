@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
 <!-- Include jQuery library -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -11,6 +12,7 @@
         <h1 class="text-center mb-4 section-heading border-bottom pb-2">Checkout</h1>
         <form method="post" action="{% url 'checkout_session' Plan.id %}" id="checkoutForm">
             {% csrf_token %}
+            <input type="hidden" name="selected_discount_id" id="selectedDiscountId" value="" />
             <table class="table table-bordered">
                 <thead class="table-warning">
                     <tr>
@@ -74,9 +76,8 @@
                     <tr>
                         <td colspan="2"></td>
                         <td>
-                            <!-- Add hidden input field for the selected discount ID -->
-                            <input type="hidden" id="selectedDiscountId" name="selected_discount_id" value="">
-                            <button type="button" id="proceedToPayment" class="btn btn-primary">Proceed to Payment</button>
+                            <!-- Remove the id attribute from the button -->
+                            <button type="button" class="btn btn-primary" id="proceedToPayment">Proceed to Payment</button>
                         </td>
                     </tr>
                 </tfoot>

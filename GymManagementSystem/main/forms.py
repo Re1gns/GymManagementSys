@@ -14,11 +14,12 @@ class EnquiryForm(forms.ModelForm):
 
 class Signup(UserCreationForm):
     class Meta:
-        model=User
+        model = User
         widgets = {
             'content': CKEditorWidget(),
         }
-        fields=('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
+        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
+
 
 class EditProfile(UserChangeForm):
     class Meta:

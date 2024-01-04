@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from . import models, forms
 import stripe
-from django.core import serializers
-from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.db.models import Count
@@ -60,28 +60,45 @@ def gallery_details(request, id):
     return render (request, 'gallery_imgs.html', {'gallery_imgs':gallery_imgs, 'gallery':gallery})
 
 #Sub Plans
+@login_required
 def pricing(request):
-    pricing=models.SubPlan.objects.annotate(total_members=Count('subscription__id')).all().order_by('price')
-    dfeatures=models.SubPlanFeature.objects.all()
+    pricing = models.SubPlan.objects.annotate(total_members=Count('subscription__id')).all().order_by('price')
+    dfeatures = models.SubPlanFeature.objects.all()
 
     countdown_values = {}
-    for pric in pricing:
-        check_validity = check_plan_validity(request.user.id, pric.id)
-        if check_validity[0]:
-            countdown_values[pric.id] = check_validity[1] * 86400000
 
-    return render(request, 'pricing.html', {'plans':pricing, 'dfeatures':dfeatures, 'countdown_values': countdown_values})
+    # Check if the user is authenticated before querying for user-specific data
+    if request.user.is_authenticated:
+        for pric in pricing:
+            check_validity = check_plan_validity(request.user.id, pric.id)
+            if check_validity[0]:
+                countdown_values[pric.id] = check_validity[1] * 86400000
+    else:
+        # If the user is not authenticated, set countdown_values to an empty dictionary
+        countdown_values = {}
+
+    return render(request, 'pricing.html', {'plans': pricing, 'dfeatures': dfeatures, 'countdown_values': countdown_values})
 
 #Signup
 def signup(request):
-    msg=None
-    if request.method =='POST':
-        form=forms.Signup(request.POST)
+    msg = None
+    form = forms.Signup()
+
+    if request.method == 'POST':
+        form = forms.Signup(request.POST)
         if form.is_valid():
             form.save()
-            msg='Thank you for registering'
-    form=forms.Signup
-    return render(request, 'registration/signup.html', {'form':form, 'msg':msg})
+            # Redirect to the login page upon successful signup
+            return redirect('login')
+        else:
+            # Extract plain text error message from form errors
+            error_message = ', '.join([' '.join(errors) for errors in form.errors.values()])
+            msg = f'There was an error with the registration form: {error_message}'
+
+    return render(request, 'registration/signup.html', {'form': form, 'msg': msg})
+
+
+
 
 #Checkout View
 def checkout(request, plan_id):
@@ -91,28 +108,45 @@ def checkout(request, plan_id):
 #Checkout session
 stripe.api_key = 'sk_test_51KlzlxCxXy9cWFkINPAB3WbgMOW6hnNf4SCVFjb0OKutMxyh0EQHWgxtxx5vYu2vxHjDmItkJyhf5ROOxzvYASe900lw3jNHvX'
 def checkout_session(request, plan_id):
-    plan=models.SubPlan.objects.get(pk=plan_id)
-    selected_discount_id = request.POST.get('selected_discount_id')
-    selected_discount = models.PlanDiscount.objects.get(pk=selected_discount_id) if selected_discount_id else None
-    unit_amount = plan.price * 100 * (1 - selected_discount.total_discount / 100) if selected_discount else plan.price * 100
+    try:
+        plan = models.SubPlan.objects.get(pk=plan_id)
+        selected_discount_id = request.POST.get('selected_discount_id')
 
-    session = stripe.checkout.Session.create(
-        line_items=[{
-            'price_data':{
-                'currency':'usd',
-                'product_data':{
-                    'name':plan.title,
+        # Retrieve the selected discount based on the selected_discount_id
+        selected_discount = models.PlanDiscount.objects.get(pk=selected_discount_id)
+
+        # Calculate the unit amount to be sent to Stripe
+        unit_amount = int(plan.price * 100)  # Convert to cents
+
+        # Apply the selected discount
+        if selected_discount.total_discount > 0:
+            unit_amount -= int((unit_amount * selected_discount.total_discount) / 100)
+
+        # Multiply by the selected number of months
+        selected_validity = int(request.POST.get('validity'))
+        unit_amount *= selected_validity
+
+        session = stripe.checkout.Session.create(
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': plan.title,
+                    },
+                    'unit_amount': unit_amount,
                 },
-                'unit_amount':int(unit_amount),
-            },
-            'quantity': 1,
-        }],
-        mode='payment',
-        success_url='http://127.0.0.1:8000/payment_success?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url='http://127.0.0.1:8000/payment_cancel',
-        client_reference_id=plan_id
-)
-    return redirect(session.url, code=303)
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url='http://127.0.0.1:8000/payment_success?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url='http://127.0.0.1:8000/payment_cancel',
+            client_reference_id=plan_id
+        )
+
+        return redirect(session.url, code=303)
+    except Exception as e:
+        # Handle exceptions appropriately
+        return HttpResponseBadRequest("Error creating checkout session.")
 
 #Payment_Success
 def payment_success(request):
@@ -144,6 +178,10 @@ def user_dashboard(request):
         assigned_trainer=models.SubsToTrainer.objects.get(user=request.user)
         enddate=current_plan.sub_date+timedelta(days=current_plan.plan.validity_period)
     except models.SubsToTrainer.DoesNotExist:
+        assigned_trainer = None
+        enddate = None
+    except models.Subscription.DoesNotExist:
+        current_plan = None
         assigned_trainer = None
         enddate = None
 
