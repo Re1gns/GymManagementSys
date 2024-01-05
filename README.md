@@ -82,6 +82,12 @@ Follow these steps to install PostgreSQL on your system.
 
    Download the installer from the [official PostgreSQL website](https://www.postgresql.org/download/windows/).
 
+## Additional Information
+
+- Adjust configurations and settings as needed based on your requirements.
+
+- For detailed documentation, visit [PostgreSQL Documentation](https://www.postgresql.org/docs/).
+
 ## General setup to get you a copy of this project.
 
 1. Clone the repository: `git clone https://github.com/Re1gns/GymManagementSys.git`

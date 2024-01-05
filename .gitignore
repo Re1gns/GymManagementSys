@@ -1,0 +1,4 @@
+# Virtual Environment
+/gym/
+/node_modules/
+/.vscode/
