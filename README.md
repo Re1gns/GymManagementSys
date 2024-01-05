@@ -111,4 +111,4 @@ If you'd like to contribute, please follow the [Contribution Guidelines](CONTRIB
 
 ## License
 
-This project is licensed under the [Reigns] - see the [LICENSE](/GymManagementSys/blob/main/LICENSE) file for details.
+This project is licensed under the [Reigns] - see the [LICENSE](/GymManagementSys/LICENSE) file for details.
