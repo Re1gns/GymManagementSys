@@ -87,6 +87,8 @@ Follow these steps to install PostgreSQL on your system.
 - Adjust configurations and settings as needed based on your requirements.
 
 - For detailed documentation, visit [PostgreSQL Documentation](https://www.postgresql.org/docs/).
+##
+
 
 ## General setup to get you a copy of this project.
 
