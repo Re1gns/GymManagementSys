@@ -163,7 +163,7 @@ def payment_success(request):
     html_content = get_template('orderemail.html').render({'title':plan.title})
     from_email = 'lreigns12@gmail.com'
     msg = EmailMessage(subject, html_content, from_email, ['vic@gmail.com'])
-    msg.content_subtype = "html"  # Main content is now text/html
+    msg.content_subtype = "html"
     msg.send()
     return render(request, 'success.html')
 
@@ -285,7 +285,6 @@ def get_notification(request):
                 'notification_detail':d.notification_detail,
                 'notifStatus':notifStatus
             })
-    #jsonData = serializers.serialize('json', data)
     return JsonResponse({'data':jsonData, 'TotalUnread':TotalUnread})
 
 #User Notifications_Mark_as Read View
@@ -389,7 +388,7 @@ def report_a_trainer(request):
         else:
             msg = 'Invalid!!!'
     else:
-        # Instantiate the form with the initial value for report_from_trainer
+        # Instantiate the form with the initial value for report_from_user
         form = forms.ReportATrainerForm(initial={'reporting_user': user.id})
 
     return render(request, 'report_a_trainer.html', {'form': form, 'msg': msg})
