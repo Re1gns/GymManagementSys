@@ -106,7 +106,7 @@ def checkout(request, plan_id):
     return render(request, 'checkout.html', {'Plan':PlanDetail})
 
 #Checkout session
-stripe.api_key = 'sk_test_51KlzlxCxXy9cWFkINPAB3WbgMOW6hnNf4SCVFjb0OKutMxyh0EQHWgxtxx5vYu2vxHjDmItkJyhf5ROOxzvYASe900lw3jNHvX'
+stripe.api_key = ''
 def checkout_session(request, plan_id):
     try:
         plan = models.SubPlan.objects.get(pk=plan_id)
